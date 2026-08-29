@@ -114,6 +114,52 @@ below) precisely because this containment discipline generalizes: any autonomous
 with tool access needs the same walls, whether its task is offensive security testing,
 coding, ops, or research.
 
+## Beyond security: real use cases
+
+None of the primitives above mention "pentest" — the mechanisms don't care what the agent
+is *for*, only that it can act. Here are realistic setups where the same walls earn their
+keep:
+
+**Autonomous coding agents (CI / dev sandboxes).** An AI coding agent with shell access
+refactors a large repository, installs packages, and runs tests on its own.
+`scope-guard` confines it to the repo and the allowed registries; `enforce` refuses
+`rm -rf`, `git push --force` and other irreversible commands unless the operator
+explicitly unlocks them; `budget` halts it for operator reset once it has burned its
+action allowance; and `audit-trail` produces a hash-chained record of everything it
+touched, so "what did the agent change?" has a mechanical answer — `verify` detects any
+tampering with that record.
+
+**Ops / SRE agents touching production.** An ops agent runs `kubectl`, `terraform`, and
+`docker` commands from a chat. The same gates that bound a pentest scope bound an
+environment scope: `scope-guard` denies anything outside the approved clusters and
+namespaces, `ssrf-guard` stops it from curling internal metadata endpoints,
+`loop-watch` catches it retrying the same failing command, and the append-only audit
+trail doubles as the change log a compliance review needs.
+
+**Data-pipeline agents over a database.** A bot that turns natural-language requests
+into SQL gets `scope-guard` over which schemas and tables it may read, `enforce`
+blocking `DROP`, `TRUNCATE`, and bare `DELETE` by default, and `evidence-quote` forcing
+any claim like "this query returned 1,204 rows" to carry an exact quote of the executed
+query — paraphrase is not proof.
+
+**Browsing / research agents.** An agent that reads the web on your behalf is kept
+honest by `ssrf-guard` (no loopback, no cloud-metadata, no link-local) and by `net`'s
+DNS pinning (a hostname that starts resolving inside your network mid-run can't
+silently redirect the request after the check passed). `privacy` redacts IPs, emails,
+and secrets at the output boundary before anything reaches the model; `budget` caps how
+much it may spend on a single task.
+
+**Personal / local assistants.** A local assistant with file access is scoped to your
+documents directory, denied destructive shell commands, and rate-limited by `budget`;
+`proc-registry` lets you pause or kill what it spawns without exposing raw PIDs;
+`privacy` keeps your credentials out of its context. Same containment, zero
+security-vendor framing.
+
+The through-line: **if an agent can act, the operator needs to bound *where*, cap *how
+much*, deny *what is dangerous*, and prove *what happened*.** Whether the action is a
+pentest payload, a `kubectl` command, a SQL statement, or a file edit, the mechanism is
+the same — and `scopelock` is that mechanism, independent of the task.
+
 ## Provenance & license
 
 `scopelock` was created specifically for situations of extreme necessity to follow the
