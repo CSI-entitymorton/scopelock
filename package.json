@@ -1,5 +1,5 @@
 {
-  "name": "scopelock",
+  "name": "@stavrosredteamer/scopelock",
   "version": "0.1.0",
   "description": "Deterministic containment and tamper-evident proof primitives for autonomous AI agents. Zero npm dependencies.",
   "license": "Apache-2.0",
