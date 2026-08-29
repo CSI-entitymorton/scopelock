@@ -116,6 +116,14 @@ coding, ops, or research.
 
 ## Provenance & license
 
+`scopelock` was created specifically for situations of extreme necessity to follow the
+rules — the situation the [stavros-dsh-redteamer](https://github.com/CSI-entitymorton/stavros-dsh-redteamer)
+harness lives in. In an authorized red-team engagement there is no room for an agent that
+wanders off-script: every action must stay inside the operator's written authorization,
+enforced by code rather than by the model's good intentions. `scopelock` is that
+enforcement, extracted, hardened and made reusable — the same fail-closed engines the
+stavros harness runs on.
+
 Licensed under **Apache-2.0** (see [`LICENSE`](./LICENSE)). See [`NOTICE`](./NOTICE) for
 attribution: this project extracts and hardens containment/proof code originally
 developed as part of the Redteamingtest project, with portions of the design and
