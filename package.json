@@ -1,0 +1,14 @@
+{
+  "name": "scopelock",
+  "version": "0.1.0",
+  "description": "Deterministic containment and tamper-evident proof primitives for autonomous AI agents. Zero npm dependencies.",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "test": "node --test test/",
+    "demo:deny": "node examples/escape-attempt.mjs",
+    "demo:allow": "node examples/in-scope-allow.mjs"
+  },
+  "files": ["src/", "examples/", "scope.example.json", "README.md", "LICENSE", "NOTICE", "SECURITY.md"]
+}
