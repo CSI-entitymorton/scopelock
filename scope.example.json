@@ -1,0 +1,7 @@
+{
+  "project": "esempio (rinominare in scope.json e compilare)",
+  "authorization": "descrivere qui l'autorizzazione esplicita all'attivita",
+  "targets": [],
+  "exclusions": [],
+  "rules_of_engagement": ["discovery-only: nessuna azione distruttiva"]
+}
