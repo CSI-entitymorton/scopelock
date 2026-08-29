@@ -116,7 +116,7 @@ coding, ops, or research.
 
 ## Beyond security: real use cases
 
-None of the primitives above mention "pentest" — the mechanisms don't care what the agent
+the mechanisms don't care what the agent
 is *for*, only that it can act. Here are realistic setups where the same walls earn their
 keep:
 
