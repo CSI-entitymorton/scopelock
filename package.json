@@ -6,7 +6,7 @@
   "type": "commonjs",
   "engines": { "node": ">=20" },
   "scripts": {
-    "test": "node --test test/",
+    "test": "node --test test/*.test.js",
     "demo:deny": "node examples/escape-attempt.mjs",
     "demo:allow": "node examples/in-scope-allow.mjs"
   },

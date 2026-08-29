@@ -1,0 +1,15 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Unit tests (offline)
+        run: node --test test/*.test.js
+      - name: Demo — deny (fail-closed)
+        run: node examples/escape-attempt.mjs
+      - name: Demo — allow (in scope)
+        run: node examples/in-scope-allow.mjs
