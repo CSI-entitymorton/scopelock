@@ -1,8 +1,12 @@
 # scopelock
 
+[![CI](https://github.com/CSI-entitymorton/scopelock/actions/workflows/ci.yml/badge.svg)](https://github.com/CSI-entitymorton/scopelock/actions/workflows/ci.yml) ![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg) ![dependencies](https://img.shields.io/badge/npm%20dependencies-0-brightgreen.svg) ![node](https://img.shields.io/badge/node-%E2%89%A520-339933.svg)
+
 **Deterministic containment + tamper-evident proof for autonomous AI agents — enforced in code, fail-closed.**
 
 **Zero npm dependencies — Node stdlib only.**
+
+![scopelock containment demo](docs/demo.gif)
 
 An autonomous agent is only as trustworthy as the walls around it. `scopelock` is a small
 set of primitives, extracted and hardened out of a larger red-team automation harness,
