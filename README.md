@@ -53,7 +53,7 @@ drive the real `src/run.js` gate — nothing is mocked.
 
 ## Core primitives
 
-Three groups, fifteen modules. Every module is independently readable (each is a few
+Three groups, fourteen modules. Every module is independently readable (each is a few
 hundred lines at most) and has no dependency outside Node's standard library.
 
 ### Containment core
@@ -73,7 +73,6 @@ hundred lines at most) and has no dependency outside Node's standard library.
 
 | Module | Role |
 |---|---|
-| `chain` | Generic hash-chain primitive: each record commits to a hash of the previous one, genesis at a fixed all-zero value. |
 | `audit-trail` | Append-only, hash-chained log of every gated action (genesis → … → tip). Exposes only `append`/`verify`/`show` — no delete, no rewrite. Tampering anywhere in the chain is detectable by `verify`. |
 | `oracle` | Mechanical verification: a finding is only treated as real if a machine-generated artifact on disk backs it up — no self-attestation by the model that produced the claim. |
 | `evidence-quote` | Requires reality-claiming statements to carry an exact, byte-for-byte quote from a workspace artifact — paraphrase is not evidence. |
@@ -101,10 +100,10 @@ counter that has already hit zero. Every primitive here follows the same discipl
   each refuse on their own; none of them trusts that "an earlier layer already checked."
 - **Mechanical verification over self-report.** Claims of "this happened" or "this is
   real" are only accepted when backed by a verifiable artifact (`oracle`,
-  `evidence-quote`) or a verifiable chain (`audit-trail`, `chain`) — never by the agent
+  `evidence-quote`) or a verifiable chain (`audit-trail`) — never by the agent
   simply saying so.
-- **No hidden state mutation.** The audit trail and the finding chain are append-only by
-  construction: the modules that write them expose no delete/rename primitive at all.
+- **No hidden state mutation.** The audit trail is append-only by
+  construction: the module that writes it exposes no delete/rename primitive at all.
 
 `scopelock` was extracted from a larger red-team automation harness (see Provenance
 below) precisely because this containment discipline generalizes: any autonomous agent
