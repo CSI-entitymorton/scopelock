@@ -3,6 +3,22 @@
   "version": "0.1.0",
   "description": "Deterministic containment and tamper-evident proof primitives for autonomous AI agents. Zero npm dependencies.",
   "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CSI-entitymorton/scopelock.git"
+  },
+  "keywords": [
+    "scopelock",
+    "containment",
+    "ai-agents",
+    "llm-agents",
+    "agent-safety",
+    "guardrails",
+    "fail-closed",
+    "security",
+    "audit-trail",
+    "scope-guard"
+  ],
   "type": "commonjs",
   "engines": { "node": ">=20" },
   "scripts": {

@@ -1,0 +1,91 @@
+name: publish
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: 'Also publish to npm (tag push does this automatically)'
+        type: boolean
+        default: false
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Unit tests (offline)
+        run: node --test test/*.test.js
+      - name: Fail-closed demo — deny (empty scope must block)
+        run: node examples/escape-attempt.mjs
+
+  pack:
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check tag matches package version
+        run: |
+          TAG="${GITHUB_REF#refs/tags/}"
+          VER="v$(node -p "require('./package.json').version")"
+          if [ "$TAG" != "$VER" ]; then
+            echo "tag $TAG does not match package version $VER" >&2
+            exit 1
+          fi
+      - name: Pack (no credentials)
+        run: mkdir -p dist && npm pack --pack-destination dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: tarball
+          path: 'dist/*.tgz'
+
+  publish:
+    needs: pack
+    # secrets cannot be referenced in job-level `if`, so the token check happens at the
+    # step level: without NPM_TOKEN the publish step is skipped cleanly ("GitHub Release
+    # only" until then). Once the token exists, the next tag publishes to npm.
+    if: startsWith(github.ref, 'refs/tags/') || (github.event_name == 'workflow_dispatch' && inputs.publish)
+    runs-on: ubuntu-latest
+    environment: npm-publish
+    permissions:
+      id-token: write
+      contents: read
+    env:
+      HAS_NPM_TOKEN: ${{ secrets.NPM_TOKEN != '' }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+          path: dist
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+      - name: Publish to npm
+        if: env.HAS_NPM_TOKEN == 'true'
+        run: npm publish ./dist/*.tgz --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  release:
+    needs: pack
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: tarball
+          path: dist
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: 'dist/*.tgz'
+          generate_release_notes: true
